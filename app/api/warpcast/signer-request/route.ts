@@ -12,7 +12,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
         },
       }
     )
-    return NextResponse.json(fcSignerRequestResponse)
+    const response = await fcSignerRequestResponse.json()
+    return NextResponse.json(response)
   } catch (error) {
     console.log(error)
     return NextResponse.json({ error: error })

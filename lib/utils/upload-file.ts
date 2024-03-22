@@ -4,12 +4,15 @@ export async function uploadFile(selectedFile: any) {
   let fileCID
   let link
   try {
-    const tempKey = await fetch("/api/key", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+    const tempKey = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/key`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
     const keyData = await tempKey.json()
     key = keyData.JWT
     keyId = keyData.pinata_api_key
@@ -63,13 +66,16 @@ export async function uploadFile(selectedFile: any) {
       apiKey: keyId,
     })
     console.log(deleteData)
-    const deleteKey = await fetch("/api/key", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: deleteData,
-    })
+    const deleteKey = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/key`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: deleteData,
+      }
+    )
     const deleteJson = await deleteKey.json()
     console.log(deleteJson)
   } catch (error) {

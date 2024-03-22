@@ -79,7 +79,7 @@ export default function UploadForm({ farcasterUser }: FormProps) {
         castMessage: values.cast,
         parentUrl: values.parentUrl,
       })
-      const submitMessage = await fetch("/api/message", {
+      const submitMessage = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/message`, {
         method: "POST",
         headers: {
           contentType: "application/json",

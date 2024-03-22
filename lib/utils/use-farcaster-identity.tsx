@@ -136,12 +136,15 @@ export function useFarcasterIdentity() {
     try {
       const keypair = await createKeypair()
       const keypairString = convertKeypairToHex(keypair)
-      const authorizationResponse = await fetch(`/api/signer`, {
-        method: "POST",
-        body: JSON.stringify({
-          publicKey: keypairString.publicKey,
-        }),
-      })
+      const authorizationResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/signer`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            publicKey: keypairString.publicKey,
+          }),
+        }
+      )
       const authorizationBody: {
         signature: string
         requestFid: string

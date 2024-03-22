@@ -22,13 +22,16 @@ export default function Feed({ channel }: any) {
         channel: channel,
         nextPage: nextPage,
       })
-      const feedData = await fetch("/api/feed", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: data,
-      })
+      const feedData = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/feed`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: data,
+        }
+      )
       const feed = await feedData.json()
       console.log("Feed", feed)
 

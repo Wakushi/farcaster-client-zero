@@ -66,12 +66,13 @@ export function useFarcasterIdentity() {
         intervalId = setInterval(async () => {
           try {
             const fcSignerRequestResponse = await fetch(
-              `https://api.warpcast.com/v2/signed-key-request?token=${farcasterUser.token}`,
+              `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/warpcast/signer-request`,
               {
-                method: "GET",
+                method: "POST",
                 headers: {
                   "Content-Type": "application/json",
                 },
+                body: JSON.stringify({ farcasterUser }),
               }
             )
             const responseBody = (await fcSignerRequestResponse.json()) as {
@@ -153,22 +154,25 @@ export function useFarcasterIdentity() {
       } = await authorizationResponse.json()
       const { signature, requestFid, deadline } = authorizationBody
       if (authorizationResponse.status === 200) {
+        const url = `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/warpcast/signed-key-request`
+        const payload = JSON.stringify({
+          key: keypairString.publicKey,
+          signature,
+          requestFid,
+          deadline,
+        })
+        const requestOptions = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: payload,
+        }
+        const fetchResponse = await fetch(url, requestOptions)
+        const jsonResponse = await fetchResponse.json()
         const {
           result: { signedKeyRequest },
-        } = (await (
-          await fetch(`https://api.warpcast.com/v2/signed-key-requests`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              key: keypairString.publicKey,
-              signature,
-              requestFid,
-              deadline,
-            }),
-          })
-        ).json()) as {
+        } = jsonResponse as {
           result: { signedKeyRequest: { token: string; deeplinkUrl: string } }
         }
 
